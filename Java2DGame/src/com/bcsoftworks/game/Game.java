@@ -14,6 +14,7 @@ import com.bcsoftworks.game.gfx.Colors;
 import com.bcsoftworks.game.gfx.Font;
 import com.bcsoftworks.game.gfx.Screen;
 import com.bcsoftworks.game.gfx.SpriteSheet;
+import com.bcsoftworks.game.level.Level;
 
 public class Game extends Canvas implements Runnable {
 
@@ -36,6 +37,8 @@ public class Game extends Canvas implements Runnable {
 	private Screen screen;
 	public InputHandler input;
 
+	public Level level;
+	
 	public Game() {
 		setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -70,6 +73,7 @@ public class Game extends Canvas implements Runnable {
 		
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/sprite_sheet.png"));
 		input = new InputHandler(this);
+		level = new Level(64,64);
 	}
 
 	public void run() {
@@ -112,21 +116,25 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 
+	private int x = 0, y = 0;
+	
 	public void tick() {
 		tickCount++;
 
 		if (input.up.isPressed()) {
-			screen.yOffset--;
+			y--;
 		}
 		if (input.down.isPressed()) {
-			screen.yOffset++;
+			y++;
 		}
 		if (input.left.isPressed()) {
-			screen.xOffset--;
+			x--;
 		}
 		if (input.right.isPressed()) {
-			screen.xOffset++;
+			x++;
 		}
+		
+		level.tick();
 	}
 
 	public void render() {
@@ -135,16 +143,19 @@ public class Game extends Canvas implements Runnable {
 			createBufferStrategy(3);
 			return;
 		}
-
-		for ( int y = 0; y < 32; y++) {
-			for ( int x = 0; x < 32; x++) {
-				boolean flipX = x % 2 == 0;
-				boolean flipY = y % 2 == 0;
-				screen.render(x<<3, y<<3, 0, Colors.get(555, 505, 055, 550), flipX, flipY);
+		
+		int xOffset = x- (screen.width/2);
+		int yOffset = y- (screen.height/2);
+		
+		level.renderTiles(screen, xOffset, yOffset);
+		
+		for(int x = 0; x < level.width ; x++) {
+			int color = Colors.get(-1, -1, -1, 000);
+			if (x % 10 == 0 && x!=0){
+				color = Colors.get(-1, -1, -1, 500);
 			}
+			Font.render((x%10)+"", screen, 0 + (x*8), 0, color);
 		}
-		String msg = "Hello World! 0157";
-		Font.render(msg, screen, screen.xOffset+ screen.width/2 - msg.length()*8/2, screen.yOffset + screen.height/2, Colors.get(-1, -1, -1, 000));
 		
 		for ( int y = 0; y < screen.height; y++) {
 			for ( int x = 0; x < screen.width; x++) {

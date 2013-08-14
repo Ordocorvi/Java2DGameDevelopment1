@@ -1,5 +1,7 @@
 package com.bcsoftworks.game.gfx;
 
+import com.bcsoftworks.game.level.Level;
+
 public class Screen {
 
 	public static final int MAP_WIDTH = 64;
@@ -51,6 +53,11 @@ public class Screen {
 			}
 		}
 		
+	}
+	
+	public void setOffset(int xOffset, int yOffset) {
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
 	}
 	
 }
