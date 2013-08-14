@@ -28,11 +28,7 @@ public class Level {
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				if(x*y % 10 < 5) {
 					tiles[x + y * width] = Tile.GRASS.getId();
-				} else {
-					tiles[x + y * width] = Tile.STONE.getId();
-				}
 			}
 		}
 
