@@ -10,6 +10,8 @@ public class Player extends Mob {
 	private InputHandler input;
 	private int color = Colors.get(-1, 111, 145, 543);
 	private int scale = 1;
+	protected boolean isSwimming = false;
+	private int tickCount = 0;
 	
 	public Player(Level level, int x, int y, InputHandler input) {
 		super(level, "Player", x, y, 1);
@@ -39,6 +41,15 @@ public class Player extends Mob {
 		} else {
 			isMoving = false;
 		}
+		if (level.getTile(this.x >> 3, this.y >> 3).getId() == 3) {
+			//System.out.println("isSwimming");
+			isSwimming = true;
+		}
+		if (isSwimming && level.getTile(this.x >> 3, this.y >> 3).getId() != 3) {
+			//System.out.println("isNotSwimming");
+			isSwimming = false;
+		}
+		tickCount++;
 		
 	}
 
@@ -60,10 +71,31 @@ public class Player extends Mob {
 		int xOffset = x - modifier/2;
 		int yOffset = y - modifier/2-4;
 		
+		if (isSwimming) {
+			int waterColor = 0;
+			yOffset += 4;
+			if (tickCount % 60 < 15) {
+				waterColor = Colors.get(-1, -1, 225, -1);
+			} else if (15 <= tickCount % 60 && tickCount % 60 < 30) {
+				yOffset -=1;
+				waterColor = Colors.get(-1, 225, 115, -1);
+			} else if (30 <= tickCount % 60 && tickCount % 60 < 45) {
+				waterColor = Colors.get(-1, 115, -1, 225);
+			} else {
+				yOffset -=1;
+				waterColor = Colors.get(-1, 225, 115, -1);
+			}
+			screen.render(xOffset, yOffset + 3, 0+27 *32, waterColor, 0x00, 1);
+			screen.render(xOffset + 8, yOffset + 3, 0+27 *32, waterColor, 0x01, 1);
+		}
+		
 		screen.render(xOffset + (modifier * flipTop), yOffset, xTile + yTile * 32, color, flipTop, scale);
 		screen.render(xOffset - (modifier * flipTop) + modifier, yOffset, xTile + yTile * 32 + 1, color, flipTop, scale);
-		screen.render(xOffset + (modifier * flipBottom), yOffset + modifier, xTile + (yTile + 1) *32, color, flipBottom, scale);
-		screen.render(xOffset - (modifier * flipBottom) + modifier, yOffset + modifier, (xTile + 1) + (yTile + 1) * 32, color, flipBottom, scale);
+		
+		if (!isSwimming) {
+			screen.render(xOffset + (modifier * flipBottom), yOffset + modifier, xTile + (yTile + 1) *32, color, flipBottom, scale);
+			screen.render(xOffset - (modifier * flipBottom) + modifier, yOffset + modifier, (xTile + 1) + (yTile + 1) * 32, color, flipBottom, scale);
+		}
 	}
 
 	public boolean hasCollided(int xa, int ya) {

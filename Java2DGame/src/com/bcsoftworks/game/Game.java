@@ -16,6 +16,7 @@ import com.bcsoftworks.game.gfx.Font;
 import com.bcsoftworks.game.gfx.Screen;
 import com.bcsoftworks.game.gfx.SpriteSheet;
 import com.bcsoftworks.game.level.Level;
+import com.bcsoftworks.game.level.tiles.Tile;
 
 public class Game extends Canvas implements Runnable {
 
@@ -75,7 +76,7 @@ public class Game extends Canvas implements Runnable {
 		
 		screen = new Screen(WIDTH, HEIGHT, new SpriteSheet("/sprite_sheet.png"));
 		input = new InputHandler(this);
-		level = new Level(64,64);
+		level = new Level("/levels/water_test_level.png");
 		player = new Player(level, 0, 0, input);
 		level.addEntity(player);
 	}
@@ -126,6 +127,12 @@ public class Game extends Canvas implements Runnable {
 		tickCount++;
 		
 		level.tick();
+		for (Tile t : Tile.tiles) {
+			if (t == null) {
+				break;
+			}
+			t.tick();
+		}
 	}
 
 	public void render() {
@@ -140,13 +147,13 @@ public class Game extends Canvas implements Runnable {
 		
 		level.renderTiles(screen, xOffset, yOffset);
 		
-		for(int x = 0; x < level.width ; x++) {
-			int color = Colors.get(-1, -1, -1, 000);
-			if (x % 10 == 0 && x!=0){
-				color = Colors.get(-1, -1, -1, 500);
-			}
-			Font.render((x%10)+"", screen, 0 + (x*8), 0, color, 1);
-		}
+//		for(int x = 0; x < level.width ; x++) {
+//			int color = Colors.get(-1, -1, -1, 000);
+//			if (x % 10 == 0 && x!=0){
+//				color = Colors.get(-1, -1, -1, 500);
+//			}
+//			Font.render((x%10)+"", screen, 0 + (x*8), 0, color, 1);
+//		}
 		
 		level.renderEntities(screen);
 		
