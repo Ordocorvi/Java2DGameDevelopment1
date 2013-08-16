@@ -31,7 +31,8 @@ public class Game extends Canvas implements Runnable {
 
 	private JFrame frame;
 	public int tickCount = 0;
-
+	
+	
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 	private int[] colors = new int[6*6*6];
@@ -121,7 +122,6 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 
-	private int x = 0, y = 0;
 	
 	public void tick() {
 		tickCount++;

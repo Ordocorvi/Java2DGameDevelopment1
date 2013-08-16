@@ -13,7 +13,7 @@ public class Colors {
 		int r = color/100%10;
 		int g = color/10%10;
 		int b = color%10;
-		return r*36 + g*6+b;
+		return r*36 + g*6 + b;
 	}
 	
 }
