@@ -20,6 +20,7 @@ public abstract class Tile {
 	private int levelColor;
 	
 	
+	
 	public Tile(int id, boolean isSolid, boolean isEmitter, int color) {
 		this.id = (byte) id;
 		if (tiles[id] != null) {
